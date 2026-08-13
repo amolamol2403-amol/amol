@@ -37,7 +37,7 @@ metadata:
   name: contact-app
   namespace: contact-app
 spec:
-  type: ClsuterIP
+  type: ClusterIP
   selector:
     app: contact-app
   ports:
