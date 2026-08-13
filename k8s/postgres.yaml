@@ -7,7 +7,18 @@ type: Opaque
 stringData:
   POSTGRES_DB: contacts
   POSTGRES_USER: contacts_user
-  POSTGRES_PASSWORD: Amol@321
+  POSTGRES_PASSWORD: change-this-to-a-strong-password
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-data
+  namespace: contact-app
+spec:
+  accessModes: [ReadWriteOnce]
+  resources:
+    requests:
+      storage: 2Gi
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -17,33 +28,24 @@ metadata:
 spec:
   replicas: 1
   selector:
-    matchLabels:
-      app: postgres
+    matchLabels: { app: postgres }
   template:
     metadata:
-      labels:
-        app: postgres
+      labels: { app: postgres }
     spec:
       containers:
         - name: postgres
           image: postgres:16-alpine
-          ports:
-            - containerPort: 5432
-          envFrom:
-            - secretRef:
-                name: postgres-secret
-          volumeMounts:
-            - name: data
-              mountPath: /var/lib/postgresql/data
+          ports: [{ containerPort: 5432 }]
+          envFrom: [{ secretRef: { name: postgres-secret } }]
+          volumeMounts: [{ name: data, mountPath: /var/lib/postgresql/data }]
           readinessProbe:
-            exec:
-              command: [sh, -c, "pg_isready -U contacts_user -d contacts"]
+            exec: { command: [sh, -c, 'pg_isready -U contacts_user -d contacts'] }
           livenessProbe:
-            exec:
-              command: [sh, -c, "pg_isready -U contacts_user -d contacts"]
+            exec: { command: [sh, -c, 'pg_isready -U contacts_user -d contacts'] }
       volumes:
         - name: data
-          emptyDir: {}
+          persistentVolumeClaim: { claimName: postgres-data }
 ---
 apiVersion: v1
 kind: Service
@@ -51,8 +53,5 @@ metadata:
   name: postgres
   namespace: contact-app
 spec:
-  selector:
-    app: postgres
-  ports:
-    - port: 5432
-      targetPort: 5432
+  selector: { app: postgres }
+  ports: [{ port: 5432, targetPort: 5432 }]

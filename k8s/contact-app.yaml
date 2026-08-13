@@ -13,7 +13,11 @@ spec:
     spec:
       containers:
         - name: contact-app
+<<<<<<< HEAD
           image: amolamol2403/contact-app:1.0.0
+=======
+          image: amolamol2403/contact-app:1.0.1
+>>>>>>> c1b026e (Add adddhaar as well)
           imagePullPolicy: Always
           ports: [{ containerPort: 3000 }]
           env:
