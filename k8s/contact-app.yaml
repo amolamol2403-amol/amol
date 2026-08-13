@@ -18,7 +18,7 @@ spec:
           ports: [{ containerPort: 3000 }]
           env:
             - name: DATABASE_URL
-              value: postgresql://contacts_user:Amol@321@postgres:5432/contacts
+              value: postgresql://contacts_user:Amol%40321@postgres:5432/contacts
           readinessProbe: { httpGet: { path: /healthz, port: 3000 } }
           livenessProbe: { httpGet: { path: /healthz, port: 3000 } }
 ---
