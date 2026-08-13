@@ -6,25 +6,30 @@ metadata:
 spec:
   replicas: 1
   selector:
-    matchLabels: { app: contact-app }
+    matchLabels:
+      app: contact-app
   template:
     metadata:
-      labels: { app: contact-app }
+      labels:
+        app: contact-app
     spec:
       containers:
         - name: contact-app
-<<<<<<< HEAD
-          image: amolamol2403/contact-app:1.0.0
-=======
           image: amolamol2403/contact-app:1.0.1
->>>>>>> c1b026e (Add adddhaar as well)
           imagePullPolicy: Always
-          ports: [{ containerPort: 3000 }]
+          ports:
+            - containerPort: 3000
           env:
             - name: DATABASE_URL
               value: postgresql://contacts_user:Amol%40321@postgres:5432/contacts
-          readinessProbe: { httpGet: { path: /healthz, port: 3000 } }
-          livenessProbe: { httpGet: { path: /healthz, port: 3000 } }
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 3000
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 3000
 ---
 apiVersion: v1
 kind: Service
@@ -33,7 +38,8 @@ metadata:
   namespace: contact-app
 spec:
   type: NodePort
-  selector: { app: contact-app }
+  selector:
+    app: contact-app
   ports:
     - port: 80
       targetPort: 3000
